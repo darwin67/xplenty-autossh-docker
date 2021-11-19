@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+
+set -xe
+
+SSH_KEY=/var/run/id_rsa
+
+autossh -M 0 -N -R \
+    ${CONN_PORT}:${DB_URL}:${DB_PORT} \
+    sshtunnel@${XPLENTY_SERVER} \
+    -g \
+    -i ${SSH_KEY} -p 50683 \
+    -o "ExitOnForwardFailure yes" \
+    -o ServerAliveInterval=10 \
+    -o ServerAliveCountMax=1 \
+    -o UserKnownHostsFile=/root/.ssh/known_hosts
