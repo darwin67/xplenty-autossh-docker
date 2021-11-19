@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namePrefix: mysql-
+
+configMapGenerator:
+  - name: autossh-config
+    behavior: merge
+    literals:
+      - CONN_PORT="50401"
+      - DB_URL="db.example.com"
+      - DB_PORT="3306"
+      - XPLENTY_SERVER="virginia-tunnel.xplenty.com"
+
+resources:
+  - ../../base
+
+patchesStrategicMerge:
+  - deployment.yaml
+
+images:
+  - name: sshtunnel
+    newName: <account>.dkr.ecr.ap-northeast-1.amazonaws.com/autossh
+    newTag: 2021.10.20

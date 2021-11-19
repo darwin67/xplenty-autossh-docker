@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: autossh
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  template:
+    spec:
+      containers:
+      - name: sshtunnel
+        image: sshtunnel
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: autossh-config
+        volumeMounts:
+        - name: credentials
+          mountPath: /var/run
+          readOnly: true
+      volumes:
+      - name: credentials
+        secret:
+          secretName: autossh-creds
+          defaultMode: 0400
